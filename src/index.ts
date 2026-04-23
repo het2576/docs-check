@@ -11,13 +11,13 @@ interface DriftReport {
   }>;
 }
 
-const REPODOC_BASE_URL = 'https://repodoc.vercel.app';
+const DRIFTLESS_BASE_URL = 'https://driftless.vercel.app';
 
 async function run(): Promise<void> {
   try {
     // ── Inputs ─────────────────────────────────────────────────
     const repoToken = core.getInput('repo-token', { required: true });
-    const apiKey = core.getInput('repodoc-api-key', { required: true });
+    const apiKey = core.getInput('driftless-api-key', { required: true });
     const failOnDrift = core.getInput('fail-on-drift') === 'true';
     const threshold = parseInt(core.getInput('drift-threshold') || '70', 10);
     const postComment = core.getInput('post-comment') !== 'false';
@@ -25,11 +25,11 @@ async function run(): Promise<void> {
     const { owner, repo } = github.context.repo;
     const octokit = github.getOctokit(repoToken);
 
-    core.info(`🔍 RepoDoc: Checking documentation for ${owner}/${repo}`);
+    core.info(`🔍 Driftless: Checking documentation for ${owner}/${repo}`);
     core.info(`   Drift threshold: ${threshold} | Fail on drift: ${failOnDrift}`);
 
-    // ── Call RepoDoc API ────────────────────────────────────────
-    const response = await fetch(`${REPODOC_BASE_URL}/api/ci/check`, {
+    // ── Call Driftless API ────────────────────────────────────────
+    const response = await fetch(`${DRIFTLESS_BASE_URL}/api/ci/check`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -40,8 +40,8 @@ async function run(): Promise<void> {
 
     if (!response.ok) {
       const errorText = await response.text();
-      core.warning(`RepoDoc API returned ${response.status}: ${errorText}`);
-      core.warning('Skipping drift check — RepoDoc may not have analyzed this repo yet.');
+      core.warning(`Driftless API returned ${response.status}: ${errorText}`);
+      core.warning('Skipping drift check — Driftless may not have analyzed this repo yet.');
       core.setOutput('drift-score', '0');
       core.setOutput('status', 'unknown');
       core.setOutput('summary', 'No analysis available');
@@ -90,7 +90,7 @@ async function run(): Promise<void> {
       core.info(`✅ Documentation is in sync. Score: ${result.drift_score}/100`);
     }
   } catch (error) {
-    core.setFailed(`RepoDoc action failed: ${error}`);
+    core.setFailed(`Driftless action failed: ${error}`);
   }
 }
 
@@ -105,17 +105,17 @@ function buildComment(result: DriftReport, threshold: number): string {
           .join('\n')}`
       : '';
 
-  return `## ${emoji} RepoDoc: Documentation Health Check
+  return `## ${emoji} Driftless: Documentation Health Check
 
 **Drift Score: ${result.drift_score}/100** — *${statusLabel}* (min: ${threshold})
 
 ${result.summary}
 ${changedItems}
 
-[→ Review and update documentation on RepoDoc](${REPODOC_BASE_URL})
+[→ Review and update documentation on Driftless](${DRIFTLESS_BASE_URL})
 
 ---
-*[RepoDoc](${REPODOC_BASE_URL}) — Self-healing documentation for GitHub repos*`;
+*[Driftless](${DRIFTLESS_BASE_URL}) — Self-healing documentation for GitHub repos*`;
 }
 
 run();

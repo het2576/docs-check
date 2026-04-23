@@ -1,6 +1,6 @@
-name: 'RepoDoc Docs Check'
+name: 'Driftless Docs Check'
 description: 'Automatically checks if your README is in sync with your code on every PR or push.'
-author: 'RepoDoc'
+author: 'Driftless'
 
 branding:
   icon: 'book-open'
@@ -10,8 +10,8 @@ inputs:
   repo-token:
     description: 'GitHub token for posting PR comments (use ${{ secrets.GITHUB_TOKEN }})'
     required: true
-  repodoc-api-key:
-    description: 'Your RepoDoc API key from repodoc.vercel.app/settings'
+  driftless-api-key:
+    description: 'Your Driftless API key from driftless.vercel.app/settings'
     required: true
   fail-on-drift:
     description: 'Set to "true" to fail the CI check when drift score is below threshold'
