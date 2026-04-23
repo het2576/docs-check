@@ -1,5 +1,5 @@
 {
-  "name": "driftless-docs-check",
+  "name": "repodoc-docs-check",
   "version": "1.0.0",
   "description": "GitHub Action: Checks if your README is in sync with your code",
   "main": "dist/index.js",
@@ -17,7 +17,7 @@
     "typescript": "^5.0.0",
     "ts-node": "^10.9.1"
   },
-  "keywords": ["github-action", "documentation", "readme", "driftless"],
+  "keywords": ["github-action", "documentation", "readme", "repodoc"],
   "license": "MIT",
   "repository": {
     "type": "git",
